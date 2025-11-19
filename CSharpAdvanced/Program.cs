@@ -1,5 +1,7 @@
 ﻿
 using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
 
 #region TaskBasedAsynchronousPattern
 //namespace CSharpAdvanced
@@ -95,4 +97,98 @@ using System.Threading.Tasks;
 //        // making it a powerful tool for working with data in C# applications.
 //    }
 //}
+#endregion
+
+#region Generics
+namespace CSharpAdvanced
+{
+    //    Notes — what this shows and why
+    //      •	List<T>: a built-in generic collection. It stores elements with compile-time type safety (no boxing/unboxing, no casts).
+    //      •	Box<T>: a custom generic class. T is a placeholder type that is supplied when the class is used(Box<int>, Box<string>).
+    //      •	GenericRepository<T>: demonstrates a reusable component that works with any type T.
+    //      •	Swap<T>: a generic method that operates on any type without duplicating code.
+
+    //    Benefits:
+    //      •	Type safety: compiler enforces correct types.
+    //      •	Reusability: write once, use for many types.
+    //      •	Performance: avoids boxing/unboxing and runtime casts.
+
+    //    When to use:
+    //      •	Collections, utilities, repositories, and APIs that should work with many types.
+    //      •	Constraints (not shown): you can restrict T (e.g., where T : class, where T : new (), or an interface) when you need specific capabilities.
+
+    //    What changed
+    //      •	Replaced the previous example in Program.cs with a concise generics demonstration including a generic class (Box<T>), a generic repository(GenericRepository<T>), and a generic method(Swap<T>). The examples are small, self-contained, and compile under the project's C# and .NET settings.
+
+
+    // Simple generic container
+    public class Box<T>
+    {
+        public T Value { get; set; }
+        public Box(T value) => Value = value;
+        public override string ToString() => $"Box contains: {Value}";
+    }
+
+    // Simple generic repository (in-memory)
+    public class GenericRepository<T>
+    {
+        private readonly List<T> _items = new();
+        public void Add(T item) => _items.Add(item);
+        public IEnumerable<T> GetAll() => _items;
+    }
+
+    internal class Program
+    {
+        // Generic method example
+        static void Swap<T>(ref T a, ref T b)
+        {
+            T temp = a;
+            a = b;
+            b = temp;
+        }
+
+        static void Main(string[] args)
+        {
+            // 1) Generic List<T> - strongly typed collection
+            var names = new List<string> { "Hatim", "Ahmed" };
+            Console.WriteLine("List<string> contents:");
+            foreach (var name in names)
+                Console.WriteLine($" - {name}");
+
+            Console.WriteLine();
+
+            // 2) Generic class: Box<T>
+            var intBox = new Box<int>(42);
+            var stringBox = new Box<string>("Hello Generics");
+            Console.WriteLine(intBox);
+            Console.WriteLine(stringBox);
+
+            Console.WriteLine();
+
+            // 3) Generic repository
+            var repo = new GenericRepository<string>();
+            repo.Add("First");
+            repo.Add("Second");
+            Console.WriteLine("GenericRepository<string> contents:");
+            foreach (var item in repo.GetAll())
+                Console.WriteLine($" * {item}");
+
+            Console.WriteLine();
+
+            // 4) Generic method: Swap<T>
+            int x = 1, y = 2;
+            Console.WriteLine($"Before swap: x = {x}, y = {y}");
+            Swap(ref x, ref y);
+            Console.WriteLine($"After swap:  x = {x}, y = {y}");
+
+            string a = "A", b = "B";
+            Console.WriteLine($"Before swap: a = {a}, b = {b}");
+            Swap(ref a, ref b);
+            Console.WriteLine($"After swap:  a={a}, b = {b}");
+        }
+    }
+}
+
+
+
 #endregion
