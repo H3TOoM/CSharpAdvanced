@@ -248,37 +248,37 @@ using System.Collections.Generic;
 #endregion
 
 #region Records
-namespace CSharpAdvanced
-{
-    // Records are a reference type introduced in C# 9.0 that provide built-in functionality for immutability and value-based equality.
-    // They are particularly useful for defining data-centric types where the primary purpose is to hold data.
-    // Records automatically generate methods like Equals, GetHashCode, and ToString based on their properties,
-    // making them ideal for scenarios where you want to compare instances based on their data rather than their references.
-    // In this example, we define a Person record with properties for Name and Age.
-    // We then create instances of the Person record and demonstrate value-based equality by comparing two instances with the same data.
-    public record Person(string Name, int Age);
-    internal class Program
-    {
-        // Equal methods and value-based equality are automatically implemented for records.
-        //public override bool Equals(object? obj)
-        //{
-        //    return base.Equals(obj);
-        //}
-        static void Main(string[] args)
-        {
-            var person1 = new Person("Hatim", 20);
-            var person2 = new Person("Hatim", 20);
-            var person3 = new Person("Rajab", 43);
-            Console.WriteLine($"Person 1: {person1}");
-            Console.WriteLine($"Person 2: {person2}");
-            Console.WriteLine($"Person 3: {person3}");
+//namespace CSharpAdvanced
+//{
+// Records are a reference type introduced in C# 9.0 that provide built-in functionality for immutability and value-based equality.
+// They are particularly useful for defining data-centric types where the primary purpose is to hold data.
+// Records automatically generate methods like Equals, GetHashCode, and ToString based on their properties,
+// making them ideal for scenarios where you want to compare instances based on their data rather than their references.
+// In this example, we define a Person record with properties for Name and Age.
+// We then create instances of the Person record and demonstrate value-based equality by comparing two instances with the same data.
+//    public record Person(string Name, int Age);
+//    internal class Program
+//    {
+//        // Equal methods and value-based equality are automatically implemented for records.
+//        //public override bool Equals(object? obj)
+//        //{
+//        //    return base.Equals(obj);
+//        //}
+//        static void Main(string[] args)
+//        {
+//            var person1 = new Person("Hatim", 20);
+//            var person2 = new Person("Hatim", 20);
+//            var person3 = new Person("Rajab", 43);
+//            Console.WriteLine($"Person 1: {person1}");
+//            Console.WriteLine($"Person 2: {person2}");
+//            Console.WriteLine($"Person 3: {person3}");
 
-            // Use value-based equality
-            Console.WriteLine($"person1 == person2: {person1 == person2}"); // True, same data
-            Console.WriteLine($"person1 == person3: {person1 == person3}"); // False, different data
-        }
-    }
-}
+//            // Use value-based equality
+//            Console.WriteLine($"person1 == person2: {person1 == person2}"); // True, same data
+//            Console.WriteLine($"person1 == person3: {person1 == person3}"); // False, different data
+//        }
+//    }
+//}
 
 // Why use records?
 //  •	Immutability: Records are immutable by default, promoting safer and more predictable code.
@@ -296,6 +296,64 @@ namespace CSharpAdvanced
 // What changed
 //  •	Added a new example demonstrating the use of records in C#.
 //  •	Included explanations of the benefits and use cases for records in C# applications.
+
+
+#endregion
+
+#region Reflection
+namespace CSharpAdvanced
+{
+    using System.Reflection;
+    internal class Program
+    {
+        // Reflection allows inspection of metadata about types at runtime.
+        // It enables dynamic type discovery, method invocation, and attribute retrieval.
+        // This is useful for scenarios like plugin systems, serialization, and testing frameworks.
+        static void Main(string[] args)
+        {
+            Type type = typeof(SampleClass);
+            // Get and display methods
+            Console.WriteLine("Methods:");
+            foreach (var method in type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
+            {
+                Console.WriteLine($"- {method.Name}");
+            }
+            // Get and display properties
+            Console.WriteLine("\nProperties:");
+            foreach (var prop in type.GetProperties())
+            {
+                Console.WriteLine($"- {prop.Name} ({prop.PropertyType.Name})");
+            }
+            // Invoke a method dynamically
+            var instance = Activator.CreateInstance(type);
+            var greetMethod = type.GetMethod("Greet");
+            greetMethod?.Invoke(instance, new object[] { "Hatim" });
+        }
+    }
+    public class SampleClass
+    {
+        public string Name { get; set; }
+        public int Age { get; set; }
+        public void Greet(string name)
+        {
+            Console.WriteLine($"Hello, {name}!");
+        }
+    }
+}
+
+// Why use Reflection?
+//  •	Dynamic type discovery: Inspect types, methods, properties at runtime.
+//  •	Plugin systems: Load and interact with types from external assemblies.
+//  •	Serialization: Convert objects to/from different formats dynamically.
+//  •	Testing frameworks: Create flexible test cases that adapt to different types.
+
+// When to use Reflection?
+//  •	When you need to work with types that are not known at compile time.
+//  •	When building frameworks or libraries that require dynamic behavior.
+//  •	When implementing serialization/deserialization mechanisms.
+//  •	When creating tools that analyze or manipulate code at runtime.
+//  •	When building plugin architectures that load modules dynamically.
+//  •	When performing advanced debugging or diagnostics that require runtime type information.
 
 
 #endregion
